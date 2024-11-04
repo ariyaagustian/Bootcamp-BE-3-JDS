@@ -1,0 +1,47 @@
+services:
+  app:
+    image: ayocodingit/langkah-nyata-service:latest
+    container_name: bootcamp-be-3-case-3-app
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_PORT=8000
+      - APP_ENV=development
+      - APP_NAME=sobat-takdir
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=bootcamp_case_3
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - JWT_SECRET=secret
+      - JWT_EXPIRES_IN=60m
+    depends_on:
+      - mysql
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  mysql:
+    image: mysql:5.7
+    container_name: bootcamp-be-3-case-3-mysql
+    platform: linux/amd64
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: bootcamp_case_3
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
